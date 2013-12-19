@@ -1,0 +1,98 @@
+// Styles
+// only importing to components
+//
+
+//@import 'components/*.scss';
+@import 'colors';
+
+// body + html
+body {
+  background-color: $base;
+  font-family: Convergence, sans-serif;
+  line-height: 1.6;
+}
+
+
+// content flows
+main {
+  margin: 0 auto;
+  max-width: 900px;
+  min-width: 380px;
+  background-color: white;
+}
+
+//
+// paragraph
+//
+p {
+  margin: 1em;
+}
+
+//
+// flow contents
+//
+section {
+  margin: 0 1em;
+
+  p {
+    margin: 1em 0;
+  }
+}
+
+//
+// headings
+//
+h1 {
+  margin: 0;
+  padding: 3em 0 0.5em;
+  color: white;
+  background-color: $red;
+  text-align: center;
+}
+
+h2 {
+  margin: 3em 0 0;
+}
+
+h3 {
+  margin: 2em 0 0;
+}
+
+//
+// figures
+//
+figure {
+  margin: 1em 0;
+  text-align: center;
+}
+
+//
+// Table
+//
+table {
+
+  width: 100%;
+
+  th {
+    color: white;
+    background-color: $green;
+  }
+
+  td, th {
+    padding: 0.25em;
+    border: 1px solid $mint;
+  }
+}
+
+
+//
+// pre
+//
+pre.prettyprint {
+  margin: 1em -3em;
+  padding: 15px;
+  font-size: 12px;
+  font-family: consolas, menlo, monaco, monospace;
+  background-color: rgba(9,9,9,0.7);
+}
+

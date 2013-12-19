@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>mscss</title>
+    <link href='http://fonts.googleapis.com/css?family=Convergence' rel='stylesheet' type='text/css'>
+    <link href="css/normalize.css" rel="stylesheet" type="text/css">
+    <style>
+    </style>
+    <link rel="stylesheet" href="http://google-code-prettify.googlecode.com/svn/trunk/styles/desert.css">
+    <link href="http://google-code-prettify.googlecode.com/svn/trunk/src/prettify.js" rel="stylesheet">
+    <script src="http://google-code-prettify.googlecode.com/svn/trunk/src/prettify.js"></script>
+    <script src="https://rawgithub.com/hail2u/google-code-prettify-language-handlers/master/lang-config.js"></script>
+    <script src="https://rawgithub.com/hail2u/google-code-prettify-language-handlers/master/lang-scss.js"></script>
+    <link rel="stylesheet" href="scss/style.css">
+</head>
+<body>
+<main>
+<article>
+    <h1>BAMBI SCSS</h1>
+    <p>BAMBI SCSSは、初期構築時からの分担作業の高速化と、コード量と比例して上がる管理コストの上昇軽減、<br>保守性の向上を目的として考えた、<a href="http://sass-lang.com/">SCSS</a>を利用したCSS制作手法です。<br>
+HTMLのclassと、命名規約にprefixを利用して全体のルールを構築していきます。</p>
+    <p>元々はCSSの保守・管理上発生していた課題をクリアするために考えられたものですが、<br>体系的に伝達可能な状態まで情報がまとまってきました</p>
+    <p>セレクタによる負荷は一旦忘れて作っています。</p>
+    <section>
+        <h2>基礎概念</h2>
+        <p>この手法は文書構造、コードスタイルを矯正しません。<br>
+            異なる情報郡をレイヤーに分け、構造化し、それらを分離して管理可能な状態にする事と<br>
+            HTML(template)からスタイルを可視化することを目的とします</p>
+        このため全てのスタイルをCSS classで表現することを明示し、<br>classの構造によって適用されるstyleを保証します。</p>
+        <p>情報は、大きく下記4つのレイヤに分離して考えていきます</p>
+        <table>
+            <tr>
+                <th>members</th>
+                <td>membersレイヤは、サービスの中核となるインタフェース郡です。このレイヤでは、再利用可能な抽象構造を持つデザインブロックを単位として取り扱います。</td>
+            </tr>
+            <tr>
+                <th>base</th>
+                <td>baseレイヤは、サービス横断の、最も大まかで具体的なレイアウト構造を担当します。
+                CSS class名には、具体的なレイアウト構造を示してください。</td>
+            </tr>
+            <tr>
+                <th>article</th>
+                <td>articleレイヤは、ページ専用の、具体的なレイアウト構造を担当します。
+                    CSS class名には、具体的なレイアウト構造を示してください。</td>
+            </tr>
+            <tr>
+                <th>cosmetics</th>
+                <td>cosmeticsレイヤは、その場限りでの整形を手伝うために用意されたレイヤです。<br>
+                    利用はあまり推薦されませんが、レイヤとして隔離しておくことで他を守ります。<br>
+                CSS class名には、CSS propertyそのものと、valueを組み合わせて命名してください</td>
+            </tr>
+        </table>
+        <figure><img src="img/layers.png" width="300" height="354"></figure>
+    </section>
+    <section>
+        <h2>スタイルの記述方法</h2>
+        <section>
+            <p>スタイルは以下の順で解釈されるように構築し、<br>レイヤ名に合わせたprefixをつけていきます。</p>
+            <ol>
+                <li>Members prefix: m</li>
+                <li>Base prefix: b</li>
+                <li>Articles prefix: a</li>
+                <li>Cosmetics prefix: c</li>
+            </ol>
+            <p>これらのレイヤにはそれぞれ性質を持たせており、<br>
+            配下に置ける class と 命名規約に制限を設けてあります。以下の表はそれらを全てまとめたものです。</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th rowspan="2">prefix</th>
+                        <th rowspan="2">意味</th>
+                        <th colspan="4">持てる子クラス</th>
+                        <th rowspan="2">parameterの利用</th>
+                        <th rowspan="2">note</th>
+                    </tr>
+                    <tr>
+                        <th>base</th>
+                        <th>article</th>
+                        <th>member</th>
+                        <th>children</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>b</td>
+                        <td>base</td>
+                        <td>○</td>
+                        <td>○</td>
+                        <td>○</td>
+                        <td>-</td>
+                        <td>○</td>
+                        <td>複数のページで利用される、プロジェクトのベースとなるレイアウト構造そのものを示すのに利用する class です</td>
+                    </tr>
+                    <tr>
+                        <td>a</td>
+                        <td>article</td>
+                        <td>-</td>
+                        <td>○</td>
+                        <td>○</td>
+                        <td>○</td>
+                        <td>-</td>
+                        <td>1ページ(action)専用のレイアウト構造そのものを示すのに利用する class です。</td>
+                    </tr>
+                    <tr>
+                        <td>m</td>
+                        <td>member</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>○</td>
+                        <td>○</td>
+                        <td>○</td>
+                        <td>このclassは、プロジェクト中どこでも利用出来る事を示す class です</td>
+                    </tr>
+                    <tr>
+                        <td>-</td>
+                        <td>children</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>○</td>
+                        <td>○</td>
+                        <td>-</td>
+                        <td>この class は member, article, base の子クラスであることを示す class です。
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>c</td>
+                        <td>cosmetics</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>このclassは、CSS propertyそのものを示すための class です。OOCSSの概念にもとづいてDRYになっている必要があります</td>
+                    </tr>
+                    <!--
+                    <tr>
+                        <td>p</td>
+                        <td>parameter</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>パラメータは、member と base に複数の挙動を期待する事を示す class です。</td>
+                    </tr>
+                    -->
+                </tbody>
+            </table>
+        </section>
+    </section>
+
+    <section>
+        <h2>基礎構築</h2>
+        <section>
+            <h3>Members</h3>
+            <p>このレイヤでは、サービスの中核となる再利用可能な抽象構造を持つデザインブロック郡を取り扱います<br>
+            簡単かつ具体的に答えると、使い回したいインターフェイス郡を取り扱います。</p>
+            <p>ユーザが操作する殆どのインターフェイスは、Members に属していくようになります</p>
+            <p>命名には、childrenと共に内容を示す抽象的な名前を付け、それぞれファイルを分割して管理します</p>
+            <h4>Example &amp; Rule</h4>
+            <pre class="prettyprint"><code>// _card_info.scss
+// 必ず、取り扱う情報を抽象化した名前付けを行ってください。
+// box, block, left 等見た目そのものを指し示してはいけません。
+// 初期値としてmarginを定義することがありますが、
+// membersは外部からの干渉無しに独立できるようにするため、marginを持つ必要がないよう設計してください。
+.m_card_info { //ファイル名と一致させてください。
+    ...
+
+    // 子classも同様に、情報を抽象化した名前付けを行ってください。
+    // children は prefixを持たせてはいけません。
+    .name {
+        ...
+    }
+    .attack {
+        ...
+    }
+    .defence {
+        ...
+    }
+
+    // members は members を取り扱う事ができます。
+    .m_image {
+        &.p_type_card {
+            ...
+        }
+    }
+
+    // parameter により m_card_info の別の振る舞いを定義します
+    &.p_type_short {
+        ...
+
+        // childrenの拡張もここで合わせて定義します。
+        .name {
+        }
+    }
+}</code></pre>
+        </section>
+        <section>
+            <h3>Base</h3>
+            <p>複数のページで利用される、ベースとなるレイアウトを構築するためのレイヤーです</p>
+            <p>命名には、レイアウト上の役割そのものを具体的に示す必要があります。<br>
+            それぞれファイルを分割して管理します。</p>
+            <p>ソーシャルゲームではほぼ決まって以下のようなレイアウト構造を示すclassやidが登場しますが、これらにあたります</p>
+            <ul>
+                <li>wrapper</li>
+                <li>header</li>
+                <li>main</li>
+                <li>footer</li>
+            </ul>
+
+            <p>Baseがprefix無しのchildrenを持てない理由は、コードを読み解くのが複雑化してしまうという事と、<br>
+            Members, Article の children への直接の関与を許さないためです。</p>
+            <h4>Example &amp; Rule</h4>
+            <pre class="prettyprint"><code class="lang-scss">// _b_wrapper.scss
+
+.b_wrapper {
+
+    // 子要素にはbase, member, article のいずれかを持つことができます
+    .b_header {
+        ...
+
+        .m_global_navigation {
+        }
+    }
+    .b_main {
+        ...
+    }
+    .b_footer {
+        ...
+    }
+
+    // Base は member以外で唯一 parameter を利用できます。
+    &.p_type_guild {
+        .b_header {
+        }
+    }
+}</code></pre>
+        </section>
+        <section>
+            <h3>article</h3>
+            <p>ページ専用のレイアウトを構築するためのレイヤーです。</p>
+            <p>命名には、レイアウト上の役割そのものを具体的に示す必要があります。</p>
+            <h4>Rule</h4>
+            <pre class="prettyprint"><code class="lang-scss">
+a.body {
+    .m_member_a {
+        background-image: url(hoge.png);
+    }
+    .m_member_b {
+        margin: 0;
+    }
+}
+.a_side {
+    .m_member_b {
+        margin: 0 auto;
+    }
+    .m_member_c {
+        padding: 15px;
+    }
+}</code>
+            </pre>
+        </section>
+        <section>
+            <h3>parameters</h3>
+            <h4>Rule</h4>
+        </section>
+    </section>
+    <section>
+        <h2>Real Example</h2>
+    </section>
+</article>
+</main>
+<script>prettyPrint()</script>
+</body>
+</html>
